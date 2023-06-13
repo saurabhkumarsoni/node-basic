@@ -1,47 +1,21 @@
+let a = 10;
+let b = 0;
 
-const fs = require('fs');
-const path = require('path');
-const dirPath = path.join(__dirname, 'crud');
-const filePath = `${dirPath}/apple.txt`;
+// setTimeout(() => {
+//     b = 30;
+// }, 2000);
 
-
-// for(i=0; i<5;i++){
-//     fs.writeFileSync(dirPath+"/hello"+i+".txt", "a sample text file of file hello" + i+ ".txt file")
-// }
-
-// fs.readdir(dirPath, (err, files)=>{
-//     files.forEach((file)=>{
-// console.log('item', file)
-//     })
-// })
+// console.log(a+b)    // here it will print because async progaming not wait unitl get the datab here seettimeout taking 2 sec and asyn will  not wait so we have to use promise to get the value accurate value of a + b
 
 
-// crud 
-// create
-// fs.writeFileSync(filePath, 'this is a simple text file');
+let promise = new Promise((resolve, reject) =>{
+    setTimeout(() => {
+        resolve(30)
+    }, 2000);
+})
 
-// read
-// fs.readFile(filePath, 'utf8', (err, item) =>{    // if you will not give utf8 than gives buffer error 
-//     console.log(item);
-// })
+promise.then((b)=>{
+    console.log(a+ b) // output is 40
+})
 
-// fs.appendFile(filePath, 'and file name is apple.txt', (err)=>{
-//     if(!err){
-//         console.log('file is updated')
-//     }
-// })
-
-
-// // rename file
-// fs.rename(filePath, `${dirPath}/fruit.txt`, (err)=>{
-//     if(!err){
-//         console.log('file name is updated')
-//     }
-// })
-
-// delete file
-fs.unlinkSync(`${dirPath}/fruit.txt`);
-
-
-// buffer - means temporary memory allocation to perform task
 
