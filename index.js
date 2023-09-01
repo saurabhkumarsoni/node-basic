@@ -1,36 +1,21 @@
-const express = require('express');
-const EventEmitter = require('events');
-const { Console } = require('console');
-const app = express();
+const mysql = require('mysql2');
 
-const event = new EventEmitter();
-let count = 0;
+const connection = mysql.createConnection({
+    host: '127.0.0.1',
+    user: 'root',
+    password: 'root',
+    database: 'employee_database',
+    port: 3306
+});
 
-event.on('countAPI', () =>{
-    count++
-    console.log('event called', count)
+connection.connect((error) =>{
+    if(error){
+        console.log("error", error);
+    } else {
+        console.log("connected");
+    }
+});
+
+connection.query("select * from employee_info", (error, result)=>{
+  console.log('result', result)
 })
-
-app.get('/', (req, res) =>{
-
-    res.send('api called');
-    event.emit('countAPI');
-});
-
-
-app.get('/search', (req, res) =>{
-
-    res.send('searchapi called');
-    event.emit('countAPI');
-});
-
-
-app.get('/update', (req, res) =>{
-
-    res.send('update api called');
-    event.emit('countAPI');
-});
-
-
-
-app.listen(5000);
