@@ -1,6 +1,9 @@
 const express = require("express");
+const jwt = require('jsonwebtoken');
 const connection = require("./config");
 const app = express();
+
+const secretKey = 'secretKey';
 
 app.use(express.json());
 
@@ -13,6 +16,43 @@ app.get("/", (req, res) => {
     }
   });
 });
+
+app.post('/login', (req, res) =>{
+  const data  = req.body;
+
+  jwt.sign({data}, secretKey, {expiresIn: '300s'}, (error, token)=>{
+    res.json({token})
+  } )
+});
+
+
+app.post('/profile', verifyToken, (req, res)=>{
+jwt.verify(req.token, secretKey, (err, authData) =>{
+  if(err){
+    res.send({result: 'invalid token'})
+  } else {
+    res.json({
+      message: "profile accessed",
+      authData
+    })
+  }
+})
+} )
+
+function verifyToken(req, res, next){
+const bearerHeader = req.headers['authorization'];
+if(typeof bearerHeader !== 'undefined'){
+  const bearer = bearerHeader.split(" ");
+  const token = bearer[1];
+  req.toke = token;
+  next();
+} else{
+  res.send({
+    result: 'token is not valid'
+  })
+}
+}
+
 
 app.post("/create-employee", (req, res) => {
   const data = req.body;
